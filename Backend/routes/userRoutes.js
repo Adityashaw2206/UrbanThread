@@ -20,4 +20,24 @@ userRouter.get("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch profile" });
   }
 });
+
+userRouter.put("/profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      req.body,
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Failed to update profile" });
+  }
+});
+
 export default userRouter;
