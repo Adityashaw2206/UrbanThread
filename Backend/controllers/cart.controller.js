@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
 import { Cart } from "../models/cart.model.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiErrors.js";
 import { toast } from "react-toastify";
 const addToCart = async (req, res) => {
