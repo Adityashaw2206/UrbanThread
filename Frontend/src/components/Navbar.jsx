@@ -107,12 +107,12 @@ const Navbar = () => {
       </ul>
 
       <div className="flex items-center gap-5">
-        <img
+        {/* <img
           onClick={() => setShowSearch(true)}
           className="w-6 cursor-pointer"
           src={assets.search_icon}
           alt=""
-        />
+        /> */}
 
         {/* profile icon area */}
         {!token && location.pathname !== "/signup" && location.pathname !== "/login" ? (
