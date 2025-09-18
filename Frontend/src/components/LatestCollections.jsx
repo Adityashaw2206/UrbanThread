@@ -25,8 +25,7 @@ const LatestCollections = () => {
       <div className="p-10 w-full flex flex-col items-center justify-center text-4xl">
         <Title text1="Latest" text2="Collections" />
         <p className="w-3/4 m-auto text-sm text-gray-600 mt-5">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid quam
-          ab error quaerat
+          Discover our latest collections, crafted to match your style and trend
         </p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-10">

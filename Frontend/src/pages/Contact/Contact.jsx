@@ -57,13 +57,13 @@ const Contact = () => {
           </p>
           <div className="text-sm space-y-2 text-gray-600">
             <p>
-              <strong>📍 Address:</strong> 123 Fashion Lane, Kolkata, India
+              <strong>📍 Address:</strong> 380 Garulia Kolkata, West Bengal India
             </p>
             <p>
-              <strong>📞 Phone:</strong> +91 98765 43210
+              <strong>📞 Phone:</strong> +91 9330307756
             </p>
             <p>
-              <strong>✉️ Email:</strong> support@urbanthread.com
+              <strong>✉️ Email:</strong> shawaditya137@gmail.com
             </p>
           </div>
         </div>

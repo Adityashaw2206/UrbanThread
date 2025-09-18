@@ -1,48 +1,4 @@
-// import React from 'react';
-// import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 
-// const Footer = () => {
-//   return (
-//     <footer className="bg-white text-black py-8 mt-10">
-//       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
-        
-//         {/* Logo & Description */}
-//         <div className=''>
-//           <h1 className="text-2xl font-bold text-black">ShopMate</h1>
-//           <p className="mt-2 text-sm w-full md:w-2/3">Your favorite place to shop everything you love. Lorem ipsum dolor sit amet consectetur adipisicing elit. At, vero.</p>
-//         </div>
-
-//         {/* Navigation Links */}
-//         <div>
-//           <p className="text-xl font-semibold text-black mb-2">ShopMate</p>
-//           <ul className='flex flex-col gap-1'>
-//             <li>Home</li>
-//             <li>About us</li>
-//             <li>Privacy Policy</li>
-//             {/* <li></li> */}
-//           </ul>
-//         </div>
-
-//         {/* Social Media */}
-//         <div>
-//           <h2 className="text-lg font-semibold text-white mb-2">Follow Us</h2>
-//           <div className="flex space-x-4">
-//             <a href="#" className="hover:text-white"><FaFacebook size={20} /></a>
-//             <a href="#" className="hover:text-white"><FaInstagram size={20} /></a>
-//             <a href="#" className="hover:text-white"><FaTwitter size={20} /></a>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Bottom Footer */}
-//       <div className="mt-8 border-t border-gray-700 pt-4 text-center text-sm">
-//         © {new Date().getFullYear()} ShopMate. All rights reserved.
-//       </div>
-//     </footer>
-//   );
-// };
-
-// export default Footer;
 
 
 import React from 'react';
@@ -69,7 +25,7 @@ const Footer = () => {
         <div>
           <p className="text-lg font-semibold text-gray-900 mb-5">Quick Links</p>
           <ul className="flex flex-col gap-1">
-            <li><a href="/shop" className="hover:text-blue-600 transition-colors">🛒 Shop</a></li>
+            <li><a href="/collections" className="hover:text-blue-600 transition-colors">🛒 Shop</a></li>
             <li><a href="/about" className="hover:text-blue-600 transition-colors">ℹ️ About</a></li>
             <li><a href="/contact" className="hover:text-blue-600 transition-colors">📞 Contact</a></li>
           </ul>
