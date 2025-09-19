@@ -14,7 +14,7 @@ const Login = () => {
   const { setToken } = useContext(ShopContext);
   // const [token, setToken] = useState("");
   // const [currentState, setCurrentState] = useState("Sign up");
-  const backendUrl = "http://localhost:5500";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const navigate = useNavigate();
 
