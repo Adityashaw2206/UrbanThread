@@ -2,19 +2,18 @@ import ApiError from "../utils/ApiErrors.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import validator from "validator";
 import { User } from "../models/user.model.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import asyncHandler from "express-async-handler";
 import { generateAccessToken, generateRefreshToken } from "../utils/Tokens.js";
 import { sendMail } from "../utils/sendMail.js";
 
-
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
   if ([name, email, password].some((field) => field && field.trim() == "")) {
     throw new ApiError(400, "All fields are required");
   }
-
+  // ✅ Add this line to debug
+  console.log("Received signup request for email:", email);
   const existedUser = await User.findOne({ email });
   if (existedUser) {
     throw new ApiError(400, "User already exists with this email");
@@ -48,6 +47,8 @@ const registerUser = async (req, res) => {
     _id: newUser._id,
   });
 
+
+  
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -80,7 +81,7 @@ const registerUser = async (req, res) => {
       "User registered successfully"
     )
   );
-};
+});
 
 // const registerUser = async (req,res) => {
 //     const {name,email, password, confirmPassword} = req.body;
