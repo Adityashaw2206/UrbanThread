@@ -17,7 +17,7 @@ import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute.jsx";
 // import Verify from './pages/Verify.jsx'
-import Profile from "./pages/Profile/Profile.jsx";
+import Profile from "./pages/Profile/profile.jsx";
 const App = () => {
   // const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   return (
