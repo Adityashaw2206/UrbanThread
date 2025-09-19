@@ -35,6 +35,9 @@ const Login = () => {
       // Save token from backend response
       localStorage.setItem("token", res.data.data.accessToken);
       setToken(res.data.data.accessToken);
+      // Inside Login.jsx after successful login
+      // localStorage.setItem("isLoggedIn", "true");
+
       // Redirect to dashboard/home
       navigate("/");
     } catch (err) {

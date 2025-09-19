@@ -25,7 +25,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
 
   const {
-    setShowSearch,
+    // setShowSearch,
     getCartCount,
     token,
     navigate,
@@ -33,9 +33,11 @@ const Navbar = () => {
     setCartItems,
   } = useContext(ShopContext);
 
+  // const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const logout = () => {
     // if (e && e.stopPropagation) e.stopPropagation(); // keep it inside
     localStorage.removeItem("token");
+    // localStorage.removeItem("isLoggedIn");
     setToken("");
     setShowMenu(false);
     setCartItems({});

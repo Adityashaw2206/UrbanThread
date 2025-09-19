@@ -156,26 +156,6 @@ if (user?.email) {
   }
 };
 
-// const verifyStripe = async(req,res) => {
-//   const {orderId, success, userId} = req.query;
-//   try {
-//     if(success === 'true'){
-//       await Order.findByIdAndUpdate(orderId,{payment: true});
-//       await User.findByIdAndUpdate(userId, { cartData: {} });
-//       // res.redirect(`${process.env.FRONTEND_URL}/orders`);
-//       // toast.success("Payment successful");
-//       res.status(200).json({success: true, message: "Payment successful"});
-//     }else{
-//       await Order.findByIdAndDelete(orderId);
-//       // res.redirect(`${process.env.FRONTEND_URL}/cart`);
-//       // toast.error("Payment failed, please try again");
-//       res.success(200).json({success: false, message: "Payment failed, please try again"});
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json(new ApiResponse(500, null, error.message));
-//   }
-// }
 
 const verifyStripe = async (req, res) => {
   console.log("VerifyStripe called:", req.query);
