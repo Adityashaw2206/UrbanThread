@@ -12,7 +12,7 @@ const PlaceOrder = () => {
   // const currency = 'USD';
   // const shipping_charge = 0;
   const {
-    userId,
+    // userId,
     cartItems,
     backendUrl,
     token,
