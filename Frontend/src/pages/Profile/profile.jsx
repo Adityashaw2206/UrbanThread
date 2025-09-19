@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-// import { toast } from "react-toastify";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "" });
   const [loading, setLoading] = useState(false);
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   // Fetch profile
   useEffect(() => {
     const fetchProfile = async () => {
@@ -37,11 +37,9 @@ const Profile = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(
-        `${backendUrl}/api/user/profile`,
-        formData,
-        { headers: { token } }
-      );
+      const res = await axios.put(`${backendUrl}/api/user/profile`, formData, {
+        headers: { token },
+      });
       setUser(res.data.user);
       setIsEditing(false); // flip back
       toast.success("Profile updated successfully 🎉");
@@ -58,12 +56,17 @@ const Profile = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <motion.div
-        className="relative w-96 h-64 [transform-style:preserve-3d] cursor-pointer"
+        className="relative w-96 h-64 cursor-pointer"
+        style={{ transformStyle: "preserve-3d" }}
+        initial={{ rotateY: 0 }}
         animate={{ rotateY: isEditing ? 180 : 0 }}
         transition={{ duration: 0.8 }}
       >
         {/* Front Side - Profile View */}
-        <div className="absolute w-full h-full bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden]">
+        <motion.div
+          className="absolute w-full h-full bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6"
+          style={{ backfaceVisibility: "hidden" }}
+        >
           <h2 className="text-xl font-bold mb-2">👤 {user.name}</h2>
           <p className="text-gray-600 mb-1">📧 {user.email}</p>
           <p className="text-gray-500">🆔 {user._id}</p>
@@ -73,10 +76,13 @@ const Profile = () => {
           >
             Edit Profile
           </button>
-        </div>
+        </motion.div>
 
         {/* Back Side - Edit Form */}
-        <div className="absolute w-full h-full bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+        <motion.div 
+          className="absolute w-full h-full bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6"
+          style={{ backfaceVisibility: "hidden", rotateY: 180 }}
+        >
           <h2 className="text-lg font-bold mb-4">Update Profile</h2>
           <form
             onSubmit={handleUpdate}
@@ -119,7 +125,7 @@ const Profile = () => {
               </button>
             </div>
           </form>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
