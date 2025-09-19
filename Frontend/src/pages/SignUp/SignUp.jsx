@@ -10,7 +10,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-  const backendUrl = "http://localhost:5500";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
