@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { ShopContext } from "../../context/ShopContext.jsx";
+import { ShopContext } from "../../Context/ShopContext.jsx";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Title from "../../components/Title";

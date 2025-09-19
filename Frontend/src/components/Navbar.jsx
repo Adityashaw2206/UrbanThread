@@ -157,51 +157,6 @@ const Navbar = () => {
             </div>
           )
         )}
-        {/* <div className="relative">
-          <img className="w-5 cursor-pointer" src={assets.profile_icon} alt="" />
-        </div> */}
-        {/* <div className="relative">
-          {token ? (
-            // logged in: toggle dropdown
-            <img
-              // ref={profileRef}
-              className="w-5 cursor-pointer"
-              src={assets.profile_icon}
-              alt="Profile"
-              onClickCapture={(e) => e.stopPropagation()} // <-- stop the document *capture* listener
-              onClick={(e) => {
-                e.stopPropagation(); // extra safety
-                setDropdownOpen((prev) => !prev);
-              }}
-            />
-          ) : (
-            // logged out: go to /login
-            <Link to="/login">
-              <img className="w-5 cursor-pointer" src={assets.profile_icon} alt="Login" />
-            </Link>
-          )}
-
-          {/* dropdown shown only when logged in AND dropdownOpen === true */}
-        {/* {token && dropdownOpen && (
-            <div
-              ref={dropdownRef}
-              className="absolute right-0 top-8 bg-white shadow-lg rounded z-50"
-              onClickCapture={(e) => e.stopPropagation()} // <-- block capture outside
-              onClick={(e) => e.stopPropagation()} // keep clicks inside
-            >
-              <div className="flex flex-col text-sm gap-2 w-36 py-3 px-5 text-gray-700 rounded">
-                <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">My Profile</p>
-                <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Orders</p>
-                <p
-                  onClick={logout}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  Logout
-                </p>
-              </div>
-            </div>
-          )} */}
-        {/* </div> */}
 
         <Link to="/cart" className="relative">
           <img className="w-5 min-w-5" src={assets.cart_icon} alt="" />
