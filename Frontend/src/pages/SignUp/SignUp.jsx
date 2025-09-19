@@ -10,11 +10,10 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://65.0.103.146:5500"
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
 
   const handleChange = (e) => {
     setFormData((prev) => ({
