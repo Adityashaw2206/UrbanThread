@@ -27,15 +27,21 @@ const allowedOrigins = [
   "http://localhost:5174", // User frontend
 ];
 
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true,
+// }));
+
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
+  origin: "https://full-stack-urban-thread.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 
 const transporter = nodemailer.createTransport({
