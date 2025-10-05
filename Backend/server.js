@@ -4,6 +4,7 @@ dotenv.config()
 
 // console.log("ENV:", process.env);
 
+console.log("CORS_ORIGIN:", process.env.CORS_ORIGIN);
 
 import mongoose from 'mongoose';
 import express, { urlencoded } from 'express';
