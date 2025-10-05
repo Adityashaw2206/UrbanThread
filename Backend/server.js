@@ -42,9 +42,11 @@ const allowedOrigins = [
 app.use(cors({
   origin: process.env.CORS_ORIGIN || "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "token"],
   credentials: true
 }));
+
+// app.options("*", cors());
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
