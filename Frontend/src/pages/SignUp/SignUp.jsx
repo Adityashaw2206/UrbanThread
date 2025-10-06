@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { ShopContextProvider } from "../../Context/ShopContextProvider";
-
+import { toast } from "react-toastify";
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -43,9 +43,9 @@ const Signup = () => {
       // console.log("Backend response:", res.data);
       // Save token from backend response
       localStorage.setItem("token", res.data.data.accessToken);
-
+      toast.success("Signup successful!");
       // Redirect after storing token
-      navigate("/login"); 
+      navigate("/"); 
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     }
