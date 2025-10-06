@@ -26,18 +26,19 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173", // Admin frontend
   "http://localhost:5174", // User frontend
+  "https://urban-thread-ruby.vercel.app", // deployed frontend
 ];
 
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true,
-// }));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN || "*",

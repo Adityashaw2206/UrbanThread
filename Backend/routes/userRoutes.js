@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser } from '../controllers/user.controller.js';
+import { registerUser, loginUser, resetPassword, forgotPassword } from '../controllers/user.controller.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { User } from '../models/user.model.js';
 const userRouter = express.Router();
@@ -39,5 +39,8 @@ userRouter.put("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to update profile" });
   }
 });
+
+userRouter.post("/forgot-password", forgotPassword);
+userRouter.post("/reset-password/:token", resetPassword);
 
 export default userRouter;

@@ -16,6 +16,9 @@ import SearchBar from "./components/SearchBar.jsx";
 import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute.jsx";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword .jsx";
+import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
+import "react-toastify/dist/ReactToastify.css";
 // import Verify from './pages/Verify.jsx'
 import Profile from "./pages/Profile/profile.jsx";
 const App = () => {
@@ -51,6 +54,8 @@ const App = () => {
         <Route path="/Contact" element={<Contact />} />
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/collections" element={<Collections />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         {/* <Route path="/verify" element={<Verify />} /> */}
       </Routes>
       <Footer />
