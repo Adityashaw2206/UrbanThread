@@ -7,11 +7,6 @@ import { generateAccessToken, generateRefreshToken } from "../utils/Tokens.js";
 import { sendMail } from "../utils/sendMail.js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
-
-
-
-
-
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
@@ -20,7 +15,12 @@ const registerUser = asyncHandler(async (req, res) => {
   }
   // ✅ Add this line to debug
   console.log("Received signup request for email:", email);
+  const normalizedEmail = email.trim().toLowerCase();
+
+  console.log("Checking for existing user with email:", email);
   const existedUser = await User.findOne({ email });
+  console.log("Found user:", existedUser);
+
   if (existedUser) {
     throw new ApiError(400, "User already exists with this email");
   }
@@ -39,7 +39,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const newUser = await User.create({
     name,
-    email,
+    email: normalizedEmail,
     password,
   });
 
@@ -53,8 +53,6 @@ const registerUser = asyncHandler(async (req, res) => {
     _id: newUser._id,
   });
 
-
-  
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -88,7 +86,6 @@ const registerUser = asyncHandler(async (req, res) => {
     )
   );
 });
-
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -145,8 +142,6 @@ const loginUser = async (req, res) => {
     );
 };
 
-
-
 // Forgot Password
 const forgotPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
@@ -164,11 +159,7 @@ const forgotPassword = async (req, res) => {
   `;
 
   try {
-    await sendEmail({
-      email: user.email,
-      subject: "Password Reset Request",
-      message,
-    });
+    await sendMail(user.email, "Password Reset Request", message);
 
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (err) {
@@ -191,7 +182,8 @@ const resetPassword = async (req, res) => {
     resetPasswordExpire: { $gt: Date.now() },
   });
 
-  if (!user) return res.status(400).json({ message: "Invalid or expired token" });
+  if (!user)
+    return res.status(400).json({ message: "Invalid or expired token" });
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(req.body.password, salt);
@@ -202,5 +194,4 @@ const resetPassword = async (req, res) => {
   res.status(200).json({ message: "Password reset successful" });
 };
 
-
-export { registerUser, loginUser,  resetPassword, forgotPassword };
+export { registerUser, loginUser, resetPassword, forgotPassword };

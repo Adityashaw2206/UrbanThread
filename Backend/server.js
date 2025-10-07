@@ -23,14 +23,21 @@ const app = express()
 
 
 app.use(express.json());
+
+
+
 const allowedOrigins = [
   "http://localhost:5173", // Admin frontend
   "http://localhost:5174", // User frontend
   "https://urban-thread-ruby.vercel.app", // deployed frontend
 ];
 
+
+
+
 app.use(cors({
   origin: function (origin, callback) {
+    // console.log("CORS request from:", origin); 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -39,6 +46,9 @@ app.use(cors({
   },
   credentials: true,
 }));
+
+console.log("CORS_ORIGIN configuration loaded");
+
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN || "*",
