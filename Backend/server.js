@@ -19,6 +19,7 @@ import orderRouter from './routes/orderRoutes.js';
 import reviewRouter from './routes/reviewRoutes.js';
 import nodemailer from 'nodemailer';
 import WebHookRoutes from './routes/WebHookRoutes.js';
+import path from 'path';
 const app = express()
 
 
@@ -33,29 +34,33 @@ const allowedOrigins = [
 ];
 
 
+app.use(express.json({limit: '1mb' }));
+app.use(urlencoded({limit: '1mb', extended: true}));
+app.use(express.static("public"));
 
+app.use(cookieParser());
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // console.log("CORS request from:", origin); 
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     // console.log("CORS request from:", origin); 
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true,
+// }));
 
 console.log("CORS_ORIGIN configuration loaded");
 
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "token"],
-  credentials: true
-}));
+// app.use(cors({
+//   origin: process.env.CORS_ORIGIN || "*",
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization", "token"],
+//   credentials: true
+// }));
 
 // app.options("*", cors());
 
@@ -104,13 +109,10 @@ app.post("/contact", async (req, res) => {
 });
 
 
-app.get('/',(req,res) => {
-    res.send("API working fine");
-})
-app.use(express.json({limit: '1mb' }));
-app.use(urlencoded({limit: '1mb', extended: true}));
-app.use(express.static("public"));
-app.use(cookieParser());
+// app.get('/',(req,res) => {
+//     res.send("API working fine");
+// })
+
 
 
 //api end points
@@ -125,5 +127,9 @@ app.use('/api/reviews', reviewRouter);
 // ⚠️ Stripe requires raw body for webhooks
 app.use("/api/stripe", WebHookRoutes);
 app.use(errorMiddleware);
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.resolve('public', 'index.html'));
+});
 
 export default app;
