@@ -55,6 +55,19 @@ const PlaceOrder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ✅ LOGIN CHECK
+
+    if (!token) {
+      toast.error("Please login first");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+      return;
+    }
+
+
+
     try {
       let orderItems = [];
       for (const items in cartItems) {

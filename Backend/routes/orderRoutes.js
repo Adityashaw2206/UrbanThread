@@ -17,6 +17,15 @@ import { Order } from "../models/order.model.js";
 const orderRouter = express.Router();
 //payment routes
 orderRouter.post("/place", authMiddleware, placeOrder);
+
+orderRouter.post("/place/stripe", authMiddleware, (req, res) => {
+  return res.json({
+    success: true,
+    message: "Stripe disabled in demo mode"
+  });
+});
+
+
 orderRouter.post("/place/stripe", authMiddleware, placeOrderStripe);
 orderRouter.post("/place/razorpay", authMiddleware, placeOrderRazorpay);
 orderRouter.get("/verify", verifyStripe);
@@ -25,16 +34,21 @@ orderRouter.get("/userOrders", authMiddleware, userOrders);
 orderRouter.delete("/delete/:orderId", authMiddleware, deleteOrder);
 
 //verify payment
-// orderRouter.post('/verifyStripe',authMiddleware, verifyStripe);
+orderRouter.post('/verifyStripe',authMiddleware, verifyStripe);
 
 //admin features
 orderRouter.get("/list", adminAuthMiddleware, allOrder);
 orderRouter.post("/status/:orderId", adminAuthMiddleware, updateStatus);
 
+
+//for production only
+
 const stripe = new Stripe(
   process.env.STRIPE_SECRET_KEY
 );
-// const orderRouter = express.Router();
+
+
+//for production only
 
 // ✅ Webhook route (no auth middleware here!)
 orderRouter.post(

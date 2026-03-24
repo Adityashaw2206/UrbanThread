@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { ShopContextProvider } from "../../Context/ShopContextProvider";
+import { ShopContext } from "../../Context/ShopContext";
 import { toast } from "react-toastify";
 const Signup = () => {
+  const {setToken} = useContext(ShopContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,12 +41,20 @@ const Signup = () => {
 
     try {
       const res = await axios.post(`${backendUrl}/api/user/signup`, formData);
+      const token = res?.data?.data?.accessToken;
+      if (!token) {
+        throw new Error("Token not received");
+      }
       // console.log("Backend response:", res.data);
       // Save token from backend response
-      localStorage.setItem("token", res.data.data.accessToken);
+      localStorage.setItem("token", token);
+      setToken(token);
       toast.success("Signup successful!");
+      // console.log("Signup response:", res.data);
+
       // Redirect after storing token
-      navigate("/"); 
+      // navigate("/"); 
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     }

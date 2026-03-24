@@ -44,12 +44,12 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken && !token) {
-      setToken(storedToken);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem("token");
+  //   if (storedToken && !token) {
+  //     setToken(storedToken);
+  //   }
+  // }, []);
   // Close dropdown when clicking outside profile icon or dropdown (capture phase)
   useEffect(() => {
     const handleDocumentClick = (e) => {

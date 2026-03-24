@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiErrors.js";
 import { Product } from "../models/product.model.js";
-import Stripe from "stripe";
+// import Stripe from "stripe";
 import dotenv from "dotenv";
 import { sendMail } from "../utils/sendMail.js";
 dotenv.config();
@@ -14,7 +14,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error("❌ STRIPE_SECRET_KEY not found in .env");
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const placeOrder = async (req, res) => {
   try {
     const { userId, items, amount, address } = req.body;
@@ -72,6 +72,41 @@ const placeOrder = async (req, res) => {
   }
 };
 
+// for demo use this code block
+
+// const placeOrderStripe = async (req, res) => {
+//   try {
+//     const { userId, items, amount, address } = req.body;
+
+//     const orderData = {
+//       userId: req.userId,
+//       items,
+//       amount,
+//       address,
+//       paymentMethod: "Stripe-Demo",
+//       payment: false,
+//       date: Date.now(),
+//     };
+
+//     const newOrder = new Order(orderData);
+//     await newOrder.save();
+
+//     return res.json({
+//       success: true,
+//       message: "Demo Mode: Stripe payment simulated successfully!",
+//       orderId: newOrder._id
+//     });
+
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json(new ApiResponse(500, null, error.message));
+//   }
+// };
+
+
+
+
+// for production use this code block
 const placeOrderStripe = async (req, res) => {
   try {
     const { origin } = req.headers;
@@ -225,7 +260,7 @@ const verifyStripe = async (req, res) => {
 const placeOrderRazorpay = async (req, res) => {};
 
 const allOrder = async (req, res) => {
-  console.log("allOrder endpoint hit");
+  // console.log("allOrder endpoint hit");
 
   try {
     const orders = await Order.find({}).sort({ date: -1 });
@@ -236,9 +271,9 @@ const allOrder = async (req, res) => {
     // console.log("Fetched orders:", orders);
 
     if (!orders || orders.length === 0) {
-      console.log("Responding with 404");
-      return res.status(404).json({
-        success: false,
+      // console.log("Responding with 404");
+      return res.status(202).json({
+        success: true,
         data: [],
         message: "No orders found",
       });

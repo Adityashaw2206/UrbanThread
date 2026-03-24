@@ -2,12 +2,30 @@ import express from 'express';
 import { registerUser, loginUser, resetPassword, forgotPassword } from '../controllers/user.controller.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { User } from '../models/user.model.js';
+import jwt from "jsonwebtoken";  
 const userRouter = express.Router();
 
 userRouter.post('/signup', registerUser);
 userRouter.post('/login', loginUser);
 // userRouter.post('/admin', adminLogin);
 // ✅ Get logged-in user's profile
+// ✅ Verify Token Route
+userRouter.get("/verify", (req, res) => {
+  try {
+    const token = req.headers.token;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: "No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    res.json({ success: true, userId: decoded.id });
+  } catch (err) {
+    return res.status(401).json({ success: false, message: "Invalid or expired token" });
+  }
+});
+
 userRouter.get("/profile", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");

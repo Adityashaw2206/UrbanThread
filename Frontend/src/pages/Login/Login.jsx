@@ -1,22 +1,35 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ShopContextProvider } from "../../Context/ShopContextProvider.jsx";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
 import { ShopContext } from "../../Context/ShopContext";
 
 const Login = () => {
-  // const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const { setToken } = useContext(ShopContext);
-  // const [token, setToken] = useState("");
-  // const [currentState, setCurrentState] = useState("Sign up");
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  const { token, setToken } = useContext(ShopContext);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+
+  // ✅ Redirect if already logged in
+  // useEffect(() => {
+    //   if (token) {
+      //     navigate("/");
+      //   }
+      // }, [navigate]);
+  // const token = localStorage.getItem("token");
+
+  // if (token) {
+  // return <Navigate to="/" replace />;
+  // }
+
+  useEffect(() => {
+    if (token) {
+      navigate("/", { replace: true });
+    }
+  }, [token, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,20 +45,23 @@ const Login = () => {
         password,
       });
 
-      // Save token from backend response
-      localStorage.setItem("token", res.data.data.accessToken);
-      setToken(res.data.data.accessToken);
-      // Inside Login.jsx after successful login
-      // localStorage.setItem("isLoggedIn", "true");
+      // ✅ Safe token extraction
+      const token = res?.data?.data?.accessToken;
 
-      // Redirect to dashboard/home
+      if (!token) {
+        setError("Invalid login response. Please try again.");
+        return;
+      }
+
+      // ✅ Save token
+      localStorage.setItem("token", token);
+      setToken(token);
+
+      // ✅ Redirect to home
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
-    // navigate("/"); // Redirect to dashboard or home page after login
-    // TODO: Connect to backend login logic here
-    // console.log("Logging in with:", { email, password });
   };
 
   return (

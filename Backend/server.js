@@ -4,7 +4,7 @@ dotenv.config()
 
 // console.log("ENV:", process.env);
 
-console.log("CORS_ORIGIN:", process.env.CORS_ORIGIN);
+// console.log("CORS_ORIGIN:", process.env.CORS_ORIGIN);
 
 import mongoose from 'mongoose';
 import express, { urlencoded } from 'express';
@@ -40,27 +40,27 @@ app.use(express.static("public"));
 
 app.use(cookieParser());
 
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // console.log("CORS request from:", origin); 
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true,
-// }));
+app.use(cors({
+  origin: function (origin, callback) {
+    // console.log("CORS request from:", origin); 
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 
-console.log("CORS_ORIGIN configuration loaded");
+// console.log("CORS_ORIGIN configuration loaded");
 
 
-// app.use(cors({
-//   origin: process.env.CORS_ORIGIN || "*",
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization", "token"],
-//   credentials: true
-// }));
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "token"],
+  credentials: true
+}));
 
 // app.options("*", cors());
 
@@ -109,9 +109,9 @@ app.post("/contact", async (req, res) => {
 });
 
 
-// app.get('/',(req,res) => {
-//     res.send("API working fine");
-// })
+app.get('/',(req,res) => {
+    res.send("API working fine");
+})
 
 
 

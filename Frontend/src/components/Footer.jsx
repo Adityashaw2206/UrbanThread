@@ -11,10 +11,9 @@ const Footer = () => {
         
         {/* Logo & Description */}
         <div >
-          <h1 className="w-32 text-3xl font-extrabold text-gray-900">ShopMate</h1>
+          <h1 className="w-50 text-xl font-extrabold text-gray-900">Urban Thread</h1>
           <p className="w-full md:w-2/3 mt-3 text-sm leading-relaxed text-gray-600">
             Discover the latest trends, enjoy fast delivery, and shop your favorite items — all in one place.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
           </p>
         </div>
 
@@ -50,7 +49,7 @@ const Footer = () => {
 
       {/* Bottom Footer */}
       <div className="mt-10 border-t border-gray-200 pt-5 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} <span className="text-gray-800 font-medium">ShopMate</span>. All rights reserved.
+        © {new Date().getFullYear()} <span className="text-gray-800 font-medium">Urban Thread</span>. All rights reserved.
       </div>
     </div>
   );

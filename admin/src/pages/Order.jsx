@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { backendUrl } from "../App.jsx";
+// import { backendUrl } from "../App.jsx";
 import { toast } from "react-toastify";
 import { assets } from "../assets/assets.js";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const Order = () => {
   const [orders, setOrders] = useState([]);
-  const adminToken = localStorage.getItem("token");
+  const adminToken = localStorage.getItem("adminToken");
 
   // Fetch all orders
   const fetchAllOrders = async () => {
-    console.log("Fetching orders...");
-    console.log("Admin Token:", adminToken);
+    // console.log("Fetching orders...");
+    // console.log("Admin Token:", adminToken);
     if (!adminToken) return;
     try {
       const response = await axios.get(`${backendUrl}/api/orders/list`, {
@@ -26,7 +27,7 @@ const Order = () => {
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
-      toast.error("Failed to fetch orders");
+      // toast.error("Failed to fetch orders");
     }
   };
 

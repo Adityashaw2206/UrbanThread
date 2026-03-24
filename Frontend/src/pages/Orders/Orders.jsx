@@ -126,6 +126,34 @@ const Orders = () => {
     }
   };
 
+  const normalizeStatus = (status) => {
+  if (!status) return "Pending";
+
+  switch (status.toLowerCase()) {
+    case "pending":
+    case "order placed":
+    case "placed":
+      return "Pending";
+
+    case "shipped":
+      return "Shipped";
+
+    case "out for delivery":
+    case "out_for_delivery":
+      return "Out for Delivery";
+
+    case "delivered":
+      return "Delivered";
+
+    case "cancelled":
+      return "Cancelled";
+
+    default:
+      return "Pending";
+    }
+  };
+
+
   return (
     <div className="min-h-[80vh] p-6 bg-gray-50 text-2xl">
       <Title text1={"My"} text2={"Orders"} />
@@ -148,11 +176,11 @@ const Orders = () => {
                 </p>
                 <span
                   className={`flex items-center gap-1 px-3 py-1 text-xs font-medium border rounded-full ${
-                    statusClasses[order.status] || statusClasses["Pending"]
+                    statusClasses[normalizeStatus(order.status)] || statusClasses["Pending"]
                   }`}
                 >
-                  {statusIcons[order.status] || statusIcons["Pending"]}
-                  {order.status}
+                  {statusIcons[normalizeStatus(order.status)] || statusIcons["Pending"]}
+                  {normalizeStatus(order.status)}
                 </span>
               </div>
 
@@ -257,7 +285,9 @@ const Orders = () => {
             {/* Stepper */}
             <div className="flex flex-col gap-6">
               {steps.map((step, i) => {
-                const currentStep = getStepIndex(selectedOrder.status);
+                const currentStep = getStepIndex(normalizeStatus(selectedOrder.status)
+);
+
                 return (
                   <div key={i} className="flex items-center gap-4">
                     <div
