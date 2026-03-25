@@ -7,7 +7,7 @@ import { Product } from "../models/product.model.js";
 import dotenv from "dotenv";
 import { sendMail } from "../utils/sendMail.js";
 import Stripe from "stripe";
-
+import { Cart } from "../models/cart.model.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 dotenv.config();
 const currency = "usd"; // Change to 'inr' if needed
@@ -207,6 +207,10 @@ const verifyStripe = async (req, res) => {
       // Clear user cart
       if (updatedOrder?.userId) {
         await User.findByIdAndUpdate(updatedOrder.userId, { cartData: {} });
+        await Cart.findOneAndUpdate(
+          { user: updatedOrder.userId },
+          { items: [] },
+        );
         const user = await User.findById(updatedOrder.userId);
         if (user?.email) {
           await sendMail(
@@ -248,7 +252,10 @@ const verifyStripe = async (req, res) => {
       //   success: false,
       //   message: "Payment failed, please try again",
       // });
-      return res.redirect(`${process.env.FRONTEND_URL}/api/user/cart`);
+      return res.status(200).json({
+        success: false,
+        message: "Payment failed",
+      });
     }
   } catch (error) {
     console.error(error);
