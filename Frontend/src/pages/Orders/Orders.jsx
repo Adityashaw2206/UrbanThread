@@ -15,9 +15,7 @@ import {
 const Orders = () => {
   const { backendUrl, token, shipping_charge } = useContext(ShopContext);
   const [orders, setOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null); // for modal
-
-  // inside Orders component
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const handleDelete = async (orderId) => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
@@ -54,39 +52,11 @@ const Orders = () => {
         }
       } catch (err) {
         console.log(err);
-        // toast.error("Failed to fetch orders");
       }
     };
 
     if (token) fetchOrders();
   }, [backendUrl, token]);
-
-  // status color mapping
-
-  // useEffect(() => {
-  //   const fetchOrders = async () => {
-  //     try {
-  //       const res = await axios.get(`${backendUrl}/api/orders/list`, { headers: { Authorization: `Bearer ${token}` } })
-  //       if (res.data.success) {
-  //         setOrders(Array.isArray(res.data.data) ? res.data.data : []);
-  //       } else {
-  //         setOrders([]);
-  //         toast.error(res.data.message);
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //       // toast.error("Failed to fetch orders");
-  //     }
-  //   };
-
-  //   let interval;
-  //   if (token) {
-  //     fetchOrders(); // fetch immediately on mount
-  //     // interval = setInterval(fetchOrders, 5000); // fetch every 5 sec
-  //   }
-
-  //   return () => clearInterval(interval); // cleanup
-  // }, [backendUrl, token]);
 
   const statusClasses = {
     Delivered: "bg-green-100 text-green-700 border-green-300",
@@ -102,7 +72,6 @@ const Orders = () => {
     Pending: <Clock size={16} />,
   };
 
-  // tracking steps
   const steps = [
     { label: "Order Placed", icon: <Package /> },
     { label: "Shipped", icon: <Truck /> },
@@ -110,7 +79,6 @@ const Orders = () => {
     { label: "Delivered", icon: <CheckCircle /> },
   ];
 
-  // find current step index
   const getStepIndex = (status) => {
     switch (status) {
       case "Pending":
@@ -127,38 +95,31 @@ const Orders = () => {
   };
 
   const normalizeStatus = (status) => {
-  if (!status) return "Pending";
+    if (!status) return "Pending";
 
-  switch (status.toLowerCase()) {
-    case "pending":
-    case "order placed":
-    case "placed":
-      return "Pending";
-
-    case "shipped":
-      return "Shipped";
-
-    case "out for delivery":
-    case "out_for_delivery":
-      return "Out for Delivery";
-
-    case "delivered":
-      return "Delivered";
-
-    case "cancelled":
-      return "Cancelled";
-
-    default:
-      return "Pending";
+    switch (status.toLowerCase()) {
+      case "pending":
+      case "order placed":
+      case "placed":
+        return "Pending";
+      case "shipped":
+        return "Shipped";
+      case "out for delivery":
+        return "Out for Delivery";
+      case "delivered":
+        return "Delivered";
+      case "cancelled":
+        return "Cancelled";
+      default:
+        return "Pending";
     }
   };
-
 
   return (
     <div className="min-h-[80vh] p-6 bg-gray-50 text-2xl">
       <Title text1={"My"} text2={"Orders"} />
 
-      {Array.isArray(orders) && orders.length === 0 ? (
+      {orders.length === 0 ? (
         <p className="text-gray-500 mt-6 text-center text-lg">
           You don’t have any orders yet.
         </p>
@@ -176,10 +137,10 @@ const Orders = () => {
                 </p>
                 <span
                   className={`flex items-center gap-1 px-3 py-1 text-xs font-medium border rounded-full ${
-                    statusClasses[normalizeStatus(order.status)] || statusClasses["Pending"]
+                    statusClasses[normalizeStatus(order.status)]
                   }`}
                 >
-                  {statusIcons[normalizeStatus(order.status)] || statusIcons["Pending"]}
+                  {statusIcons[normalizeStatus(order.status)]}
                   {normalizeStatus(order.status)}
                 </span>
               </div>
@@ -191,14 +152,12 @@ const Orders = () => {
                     key={i}
                     className="flex justify-between items-center gap-4 border-b pb-3"
                   >
-                    {/* Product Image */}
                     <img
                       src={item.image}
                       alt={item.name}
                       className="w-20 h-20 object-cover rounded-md border"
                     />
 
-                    {/* Product Info */}
                     <div className="flex-1">
                       <p className="font-medium text-gray-800">{item.name}</p>
                       <p className="text-sm text-gray-500">
@@ -218,23 +177,46 @@ const Orders = () => {
                   <div className="flex justify-between">
                     <p className="font-medium">Shipping:</p>
                     <p>
-                      {(order.shipping_charge !== undefined
-                        ? order.shipping_charge
-                        : shipping_charge) +
+                      {(order.shipping_charge ?? shipping_charge) +
                         " " +
                         (order.currency || "$")}
                     </p>
                   </div>
+
                   <div className="flex justify-between text-base font-semibold">
                     <p>Total:</p>
                     <p>
                       {order.amount} {order.currency || "$"}
                     </p>
                   </div>
+
+                  {/* 🔥 Payment Method */}
+                  <div className="flex justify-between items-center text-sm">
+                    <p className="font-medium">Payment Method:</p>
+                    <span className="px-2 py-1 rounded bg-gray-100 text-gray-700 text-xs font-medium">
+                      {order.paymentMethod === "Stripe"
+                        ? "Stripe 💳"
+                        : "Cash on Delivery 💵"}
+                    </span>
+                  </div>
+
+                  {/* 🔥 Payment Status */}
+                  <div className="flex justify-between items-center text-sm">
+                    <p className="font-medium">Payment Status:</p>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        order.payment
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {order.payment ? "Paid ✅" : "Pending ⏳"}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Address */}
-                <div className="ml-0 mt-4 text-sm text-gray-600">
+                <div className="mt-4 text-sm text-gray-600">
                   <p>
                     <span className="font-medium">Name:</span>{" "}
                     {order.address.firstName} {order.address.lastName}
@@ -252,17 +234,14 @@ const Orders = () => {
                 </div>
               </div>
 
-              {/* Footer Actions */}
+              {/* Footer */}
               <div className="flex justify-end mt-5 gap-3">
-                {/* <button className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-100">
-                  Invoice
-                </button> */}
                 <button
-                    onClick={() => handleDelete(order._id)}
-                    className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
+                  onClick={() => handleDelete(order._id)}
+                  className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+                >
+                  Delete
+                </button>
 
                 <button
                   onClick={() => setSelectedOrder(order)}
@@ -276,17 +255,17 @@ const Orders = () => {
         </div>
       )}
 
-      {/* Tracking Modal */}
+      {/* Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl p-6 w-[90%] max-w-lg shadow-lg relative">
             <h2 className="text-xl font-semibold mb-4">Track Order</h2>
 
-            {/* Stepper */}
             <div className="flex flex-col gap-6">
               {steps.map((step, i) => {
-                const currentStep = getStepIndex(normalizeStatus(selectedOrder.status)
-);
+                const currentStep = getStepIndex(
+                  normalizeStatus(selectedOrder.status)
+                );
 
                 return (
                   <div key={i} className="flex items-center gap-4">
@@ -301,7 +280,9 @@ const Orders = () => {
                     </div>
                     <p
                       className={`text-sm font-medium ${
-                        i <= currentStep ? "text-green-600" : "text-gray-400"
+                        i <= currentStep
+                          ? "text-green-600"
+                          : "text-gray-400"
                       }`}
                     >
                       {step.label}
@@ -311,7 +292,6 @@ const Orders = () => {
               })}
             </div>
 
-            {/* Close Btn */}
             <button
               onClick={() => setSelectedOrder(null)}
               className="absolute top-3 right-3 text-gray-500 hover:text-black"

@@ -26,7 +26,7 @@ WebHookRoutes.post("/webhook", express.raw({ type: "application/json" }), async 
       const userId = session.client_reference_id;
 
       // ✅ Mark order as paid
-      await Order.findByIdAndUpdate(orderId, { payment: true });
+      await Order.findByIdAndUpdate(orderId, { payment: true, status: "Paid" });
 
       // ✅ Clear user’s cart
       await Cart.findOneAndUpdate({ user: userId }, { items: [] });

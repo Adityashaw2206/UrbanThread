@@ -18,12 +18,12 @@ const orderRouter = express.Router();
 //payment routes
 orderRouter.post("/place", authMiddleware, placeOrder);
 
-orderRouter.post("/place/stripe", authMiddleware, (req, res) => {
-  return res.json({
-    success: true,
-    message: "Stripe disabled in demo mode"
-  });
-});
+// orderRouter.post("/place/stripe", authMiddleware, (req, res) => {
+//   return res.json({
+//     success: true,
+//     message: "Stripe disabled in demo mode"
+//   });
+// });
 
 
 orderRouter.post("/place/stripe", authMiddleware, placeOrderStripe);

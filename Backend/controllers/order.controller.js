@@ -6,6 +6,9 @@ import { Product } from "../models/product.model.js";
 // import Stripe from "stripe";
 import dotenv from "dotenv";
 import { sendMail } from "../utils/sendMail.js";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 dotenv.config();
 const currency = "usd"; // Change to 'inr' if needed
 const shipping_charges = 10;
@@ -57,7 +60,7 @@ const placeOrder = async (req, res) => {
        newOrder._id
      }</b> has been placed successfully with Cash on Delivery. 😁😁😁</p>
      <p>Amount: $${amount}</p>
-     <p>We’ll notify you when it’s confirmed.</p>`
+     <p>We’ll notify you when it’s confirmed.</p>`,
       );
     }
 
@@ -103,9 +106,6 @@ const placeOrder = async (req, res) => {
 //   }
 // };
 
-
-
-
 // for production use this code block
 const placeOrderStripe = async (req, res) => {
   try {
@@ -139,19 +139,19 @@ const placeOrderStripe = async (req, res) => {
     await newOrder.save();
 
     const user = await User.findById(userId);
-if (user?.email) {
-  await sendMail(
-    user.email,
-    "Order Initiated with Stripe",
-    `<h3>Hi ${user.name || "User"},</h3>
+    if (user?.email) {
+      await sendMail(
+        user.email,
+        "Order Initiated with Stripe",
+        `<h3>Hi ${user.name || "User"},</h3>
      <p>Your order <b>${newOrder._id}</b> has been created. Please complete your payment via Stripe.</p>
-     <p>Total Amount: $${amount}</p>`
-  );
-}
+     <p>Total Amount: $${amount}</p>`,
+      );
+    }
 
     const line_items = items.map((item) => ({
       price_data: {
-        currency: "inr",
+        currency: "usd",
         product_data: {
           name: item.name,
           // images: [item.image]
@@ -163,7 +163,7 @@ if (user?.email) {
 
     line_items.push({
       price_data: {
-        currency: "inr",
+        currency: "usd",
         product_data: {
           name: "Shipping Charge",
           // images: [item.image]
@@ -176,8 +176,10 @@ if (user?.email) {
     const session = await stripe.checkout.sessions.create({
       // success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
       // cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
-      success_url: `${process.env.BACKEND_URL}/api/orders/verify?success=true&orderId=${newOrder._id}`,
-      cancel_url: `${process.env.BACKEND_URL}/api/orders/verify?success=false&orderId=${newOrder._id}`,
+      // success_url: `${process.env.BACKEND_URL}/api/orders/verify?success=true&orderId=${newOrder._id}`,
+      // cancel_url: `${process.env.BACKEND_URL}/api/orders/verify?success=false&orderId=${newOrder._id}`,
+      success_url: `${process.env.FRONTEND_URL}/verify?success=true&orderId=${newOrder._id}`,
+      cancel_url: `${process.env.FRONTEND_URL}/verify?success=false&orderId=${newOrder._id}`,
       line_items,
       mode: "payment",
       payment_method_types: ["card"],
@@ -186,46 +188,46 @@ if (user?.email) {
 
     res.json({ success: true, url: session.url });
   } catch (error) {
-    console.log(error);
+    console.log("STRIPE ERROR:", error);
     return res.status(500).json(new ApiResponse(500, null, error.message));
   }
 };
 
-
 const verifyStripe = async (req, res) => {
-  console.log("VerifyStripe called:", req.query);
+  // console.log("VerifyStripe called:", req.query);
   const { orderId, success } = req.query;
   try {
     if (success === "true") {
       const updatedOrder = await Order.findByIdAndUpdate(
         orderId,
         { payment: true, status: "confirmed" },
-        { new: true }
+        { new: true },
       );
 
       // Clear user cart
       if (updatedOrder?.userId) {
         await User.findByIdAndUpdate(updatedOrder.userId, { cartData: {} });
-         const user = await User.findById(updatedOrder.userId);
+        const user = await User.findById(updatedOrder.userId);
         if (user?.email) {
           await sendMail(
             user.email,
             "Payment Successful",
             `<h3>Hi ${user.name || "User"},</h3>
              <p>Your payment for order <b>${updatedOrder._id}</b> was successful.</p>
-             <p>We will process your order soon.</p>`
+             <p>We will process your order soon.</p>`,
           );
         }
       }
-
-
 
       // return res.status(200).json({
       //   success: true,
       //   message: "Payment successful",
       //   order: updatedOrder,
       // });
-      return res.redirect(`${process.env.FRONTEND_URL}/api/user/orders`);
+      return res.status(200).json({
+        success: true,
+        message: "Payment verified",
+      });
     } else {
       // Instead of deleting, mark as cancelled (better tracking)
       await Order.findByIdAndUpdate(orderId, { status: "cancelled" });
@@ -239,7 +241,7 @@ const verifyStripe = async (req, res) => {
           user.email,
           "Payment Failed",
           `<h3>Hi ${user.name || "User"},</h3>
-           <p>Your payment for order <b>${orderId}</b> failed. Please try again.</p>`
+           <p>Your payment for order <b>${orderId}</b> failed. Please try again.</p>`,
         );
       }
       // return res.status(200).json({
@@ -358,7 +360,7 @@ const updateStatus = async (req, res) => {
     const order = await Order.findByIdAndUpdate(
       orderId,
       { status },
-      { new: true }
+      { new: true },
     );
     if (!order) {
       return res.status(404).json({
@@ -367,7 +369,7 @@ const updateStatus = async (req, res) => {
       });
     }
 
-     // 📩 Send status update email
+    // 📩 Send status update email
     if (order?.userId) {
       const user = await User.findById(order.userId);
       if (user?.email) {
@@ -375,7 +377,7 @@ const updateStatus = async (req, res) => {
           user.email,
           "Order Status Updated",
           `<h3>Hi ${user.name || "User"},</h3>
-           <p>Your order <b>${order._id}</b> status has been updated to: <b>${status}</b>.</p>`
+           <p>Your order <b>${order._id}</b> status has been updated to: <b>${status}</b>.</p>`,
         );
       }
     }
@@ -413,7 +415,7 @@ const deleteOrder = async (req, res) => {
           <p>If this wasn't you, please contact our support team.</p>
           <br/>
           <p>Thank you,<br/>MyShop Team</p>
-        `
+        `,
         // user.email,
         // "Order deleted successfully",
         // `<h3>Hi ${user.name || "User"},</h3>

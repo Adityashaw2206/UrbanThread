@@ -19,6 +19,7 @@ import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute.jsx";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword .jsx";
 import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
 import "react-toastify/dist/ReactToastify.css";
+import Verify from "./pages/Verify/Verify.jsx";
 // import Verify from './pages/Verify.jsx'
 import Profile from "./pages/Profile/profile.jsx";
 const App = () => {
@@ -56,7 +57,7 @@ const App = () => {
         <Route path="/collections" element={<Collections />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-        {/* <Route path="/verify" element={<Verify />} /> */}
+        <Route path="/verify" element={<Verify />} />
       </Routes>
       <Footer />
     </div>
