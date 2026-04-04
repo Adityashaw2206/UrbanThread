@@ -7,6 +7,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/Tokens.js";
 import { sendMail } from "../utils/sendMail.js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
+import ms from "ms";
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
@@ -14,12 +15,12 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
   // ✅ Add this line to debug
-  console.log("Received signup request for email:", email);
+  // console.log("Received signup request for email:", email);
   const normalizedEmail = email.trim().toLowerCase();
 
-  console.log("Checking for existing user with email:", email);
+  // console.log("Checking for existing user with email:", email);
   const existedUser = await User.findOne({ email });
-  console.log("Found user:", existedUser);
+  // console.log("Found user:", existedUser);
 
   if (existedUser) {
     throw new ApiError(400, "User already exists with this email");
@@ -125,17 +126,20 @@ const loginUser = async (req, res) => {
     httpOnly: true,
     secure: true,
   };
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
     .json(
       new ApiResponse(
         200,
         {
           user: loggedInUser,
           accessToken,
-          refreshToken,
         },
         "User logged in successfully"
       )
